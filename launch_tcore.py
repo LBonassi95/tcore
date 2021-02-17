@@ -2,10 +2,10 @@ import os
 import tcore
 import writer
 from os import path
-from FDgrounder import ground
+from downward.FDgrounder import ground
 import click
 import time
-from FDgrounder import pddl
+from downward.FDgrounder import pddl
 import data_structures as ds
 SEPARATOR = '__'
 
