@@ -8,6 +8,7 @@ SEEN_PHI = 'seen-phi'
 SEEN_PSI = 'seen-psi'
 SEPARATOR = '-'
 GOAL_ACHIEVED = "goal-achieved"
+OPTIMIZED = False
 
 
 class ProblemUnsolvableException(Exception):
@@ -201,59 +202,106 @@ def add_cond_eff(E, cond_eff):
 
 
 def manage_always_compilation(phi, a):
-    if not can_falsify(a, phi):
-        return None, False
-    R = regression_aux(phi, a).simplified()
-    if R == phi:
-        return None, False
+    if OPTIMIZED:
+        if not can_falsify(a, phi):
+            return None, False
+        R = regression_aux(phi, a).simplified()
+        if R == phi:
+            return None, False
+        else:
+            return R, True
     else:
-        return R, True
+        R = regression_aux(phi, a).simplified()
+        if R == phi:
+            return None, False
+        else:
+            return R, True
 
 
 def manage_amo_compilation(phi, m_atom, a, E):
-    if not can_make_true(a, phi):
-        return None, False
-    monitoring_atom = ds.Literal(m_atom, False)
-    R = regression_aux(phi, a)
-    if R == phi:
-        return None, False
+    if OPTIMIZED:
+        if not can_make_true(a, phi):
+            return None, False
+        monitoring_atom = ds.Literal(m_atom, False)
+        R = regression_aux(phi, a)
+        if R == phi:
+            return None, False
+        else:
+            rho = ds.Or([R.negate(), monitoring_atom.negate(), phi]).simplified()
+            add_cond_eff(E, create_cond_eff(R, monitoring_atom))
+            return rho, True
     else:
-        rho = ds.Or([R.negate(), monitoring_atom.negate(), phi]).simplified()
-        add_cond_eff(E, create_cond_eff(R, monitoring_atom))
-        return rho, True
+        monitoring_atom = ds.Literal(m_atom, False)
+        R = regression_aux(phi, a)
+        if R == phi:
+            return None, False
+        else:
+            rho = ds.Or([R.negate(), monitoring_atom.negate(), phi]).simplified()
+            add_cond_eff(E, create_cond_eff(R, monitoring_atom))
+            return rho, True
 
 
 def manage_sb_compilation(phi, psi, m_atom, a, E):
-    monitoring_atom = ds.Literal(m_atom, False)
-    added_precond = (None, False)
-    if can_make_true(a, phi):
+    if OPTIMIZED:
+        monitoring_atom = ds.Literal(m_atom, False)
+        added_precond = (None, False)
+        if can_make_true(a, phi):
+            R_phi = regression_aux(phi, a)
+            rho = ds.Or([R_phi.negate(), monitoring_atom]).simplified()
+            added_precond = (rho, True)
+        if can_make_true(a, psi):
+            R_psi = regression_aux(psi, a)
+            if R_psi != psi:
+                add_cond_eff(E, create_cond_eff(R_psi, monitoring_atom))
+        return added_precond
+    else:
+        monitoring_atom = ds.Literal(m_atom, False)
         R_phi = regression_aux(phi, a)
-        rho = ds.Or([R_phi.negate(), monitoring_atom]).simplified()
-        added_precond = (rho, True)
-    if can_make_true(a, psi):
+        if R_phi == phi:
+            added_precond = (None, False)
+        else:
+            rho = ds.Or([R_phi.negate(), monitoring_atom]).simplified()
+            added_precond = (rho, True)
         R_psi = regression_aux(psi, a)
         if R_psi != psi:
             add_cond_eff(E, create_cond_eff(R_psi, monitoring_atom))
-    return added_precond
+        return added_precond
 
 
 def manage_sometime_compilation(phi, m_atom, a, E):
-    if can_make_true(a, phi):
+    if OPTIMIZED:
+        if can_make_true(a, phi):
+            monitoring_atom = ds.Literal(m_atom, False)
+            R = regression_aux(phi, a)
+            add_cond_eff(E, create_cond_eff(R, monitoring_atom))
+    else:
         monitoring_atom = ds.Literal(m_atom, False)
         R = regression_aux(phi, a)
-        add_cond_eff(E, create_cond_eff(R, monitoring_atom))
+        if R != phi:
+            add_cond_eff(E, create_cond_eff(R, monitoring_atom))
 
 
 def manage_sa_compilation(phi, psi, m_atom, a, E):
-    R1 = regression_aux(phi, a)
-    R2 = regression_aux(psi, a)
-    monitoring_atom = ds.Literal(m_atom, False)
-    if can_make_true(a, phi) or can_falsify(a, psi):
-        cond = ds.And([R1, R2.negate()]).simplified()
-        cond_eff = create_cond_eff(cond, monitoring_atom.negate())
-        add_cond_eff(E, cond_eff)
-    if can_make_true(a, psi):
-        add_cond_eff(E, create_cond_eff(R2, monitoring_atom))
+    if OPTIMIZED:
+        R1 = regression_aux(phi, a)
+        R2 = regression_aux(psi, a)
+        monitoring_atom = ds.Literal(m_atom, False)
+        if can_make_true(a, phi) or can_falsify(a, psi):
+            cond = ds.And([R1, R2.negate()]).simplified()
+            cond_eff = create_cond_eff(cond, monitoring_atom.negate())
+            add_cond_eff(E, cond_eff)
+        if can_make_true(a, psi):
+            add_cond_eff(E, create_cond_eff(R2, monitoring_atom))
+    else:
+        R1 = regression_aux(phi, a)
+        R2 = regression_aux(psi, a)
+        monitoring_atom = ds.Literal(m_atom, False)
+        if phi != R1 or psi != R2:
+            cond = ds.And([R1, R2.negate()]).simplified()
+            cond_eff = create_cond_eff(cond, monitoring_atom.negate())
+            add_cond_eff(E, cond_eff)
+        if psi != R2:
+            add_cond_eff(E, create_cond_eff(R2, monitoring_atom))
 
 
 def get_all_effects(a):
