@@ -53,7 +53,7 @@ class SometimeBefore(HardConstraint):
                 self.gd1 == other.gd1 and self.gd2 == other.gd2)
 
     def __str__(self):
-        return '({} {} ())'.format(self.kind, str(self.gd1), str(self.gd2))
+        return '({} {})'.format(self.kind, str(self.gd1), str(self.gd2))
 
 
 class SometimeAfter(HardConstraint):
@@ -66,4 +66,4 @@ class SometimeAfter(HardConstraint):
                 self.gd1 == other.gd1 and self.gd2 == other.gd2)
 
     def __str__(self):
-        return '({} {} ())'.format(self.kind, str(self.gd1), str(self.gd2))
+        return '({} {})'.format(self.kind, str(self.gd1), str(self.gd2))

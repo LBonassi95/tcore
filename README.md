@@ -11,6 +11,6 @@ Before validating a solution, use clean_tcore_sol.py
 syntax: python clean_tcore_sol.py solution_path
 
 # Requirements:
-The package downward/FDgrounder from https://github.com/LBonassi95/downward is required.
+The package downward from https://github.com/LBonassi95/downward is required in this directory.
 
 The scripts where tested with a python version >= 3.6 

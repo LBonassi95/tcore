@@ -351,7 +351,7 @@ def tcore(F, A, I, G, C):
             A_prime.append(a)
     G_new = ds.And([G, G_prime]).simplified()
 
-    print("Compiled actions: {}".format(compiled_action))
+    #print("Compiled actions: {}".format(compiled_action))
     return F + F_prime, A_prime, I + I_prime, G_new
 
 

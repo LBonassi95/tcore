@@ -80,14 +80,18 @@ def convert(F, A, I, G, C):
     for c in C:
         C_new.append(convert_constraint(c))
     return F_new, A_new, I_new, G_new, C_new
+    
 
 @click.command()
 @click.argument('domain')
 @click.argument('problem')
 @click.argument('output')
-def main(domain, problem, output):
+@click.option('--optimized', is_flag=True)
+def main(domain, problem, output, optimized):
     F, A, I, G, C = ground(domain, problem)
     F, A, I, G, C = convert(F, A, I, G, C)
+    if optimized:
+        tcore.OPTIMIZED = True
     start_time = time.time()
     print("Starting TCORE")
     F_prime, A_prime, I_prime, G_prime = tcore.tcore(F, A, I, G, C)
