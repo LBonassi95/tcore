@@ -18,4 +18,4 @@ The scripts where tested with a python version >= 3.6
 
 # Benchmarks
 
-Experimental analisys of tcore was done on the benchmarks that can be found at https://github.com/LBonassi95/Benchmarks-ICAPS-2021
+Experimental analysis of tcore was done on the benchmarks that can be found at https://github.com/LBonassi95/Benchmarks-ICAPS-2021
