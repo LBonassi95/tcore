@@ -312,7 +312,10 @@ def get_all_effects(a):
 def get_relevant_constraints(a, relevancy_dict):
     relevant_constrains = []
     for eff in a.effects:
-        relevant_constrains += relevancy_dict.get(eff.effect.literal, [])
+        constr = relevancy_dict.get(eff.effect.literal, [])
+        for c in constr:
+            if c not in relevant_constrains:
+                relevant_constrains.append(c)
     return relevant_constrains
 
 
