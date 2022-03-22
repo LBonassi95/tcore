@@ -1,4 +1,4 @@
-import data_structures as ds
+from . import *
 
 
 class Effect:
@@ -7,7 +7,7 @@ class Effect:
         self.effect = effect
 
     def __str__(self):
-        if isinstance(self.condition, ds.TRUE):
+        if isinstance(self.condition, TRUE):
             return str(self.effect)
         else:
             return '(when {} {})'.format(str(self.condition), str(self.effect))
@@ -30,5 +30,5 @@ class Action:
         for eff in self.effects:
             eff_str += str(eff)
 
-        pre_str = str(ds.And(self.precondition).simplified())
+        pre_str = str(And(self.precondition).simplified())
         return action_str.format(name=self.name, preconditions=pre_str, effects=eff_str)

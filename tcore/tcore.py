@@ -1,4 +1,4 @@
-import data_structures as ds
+from . import data_structures as ds
 
 NUM = 'num'
 CONSTRAINTS = 'constraints'
