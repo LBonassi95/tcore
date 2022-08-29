@@ -1,4 +1,4 @@
-from . import data_structures as ds
+import tcore.data_structures as ds
 
 NUM = 'num'
 CONSTRAINTS = 'constraints'
@@ -319,7 +319,7 @@ def get_relevant_constraints(a, relevancy_dict):
     return relevant_constrains
 
 
-def tcore(F, A, I, G, C):
+def compile(F, A, I, G, C):
     relevancy_dict = build_relevancy_dict(C)
     A_prime = []
     G_prime = []

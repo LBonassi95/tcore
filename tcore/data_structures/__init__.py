@@ -1,3 +1,4 @@
+import imp
 from .formula import Literal
 from .formula import And
 from .formula import Or
@@ -19,3 +20,5 @@ from .constraints import SOMETIMEAFTER
 from .constraints import SOMETIMEBEFORE
 from .constraints import ATMOSTONCE
 from .constraints import has2gd
+
+from .utils import convert
