@@ -1,3 +1,4 @@
+from email.policy import default
 import os
 from os import path
 from FDgrounder import ground
@@ -13,12 +14,15 @@ import time
 @click.argument('domain')
 @click.argument('problem')
 @click.argument('output')
-@click.option('--optimized', is_flag=True)
-def main(domain, problem, output, optimized):
+@click.option('--optimized', is_flag=True, default=False)
+@click.option('--simplify-goal', is_flag=True, default=False)
+def main(domain, problem, output, optimized, simplify_goal):
     F, A, I, G, C = ground(domain, problem)
     F, A, I, G, C = ds.convert(F, A, I, G, C)
     if optimized:
         compilation.OPTIMIZED = True
+    if simplify_goal:
+        compilation.SIMPLIFY_GOAL = True
     start_time = time.time()
     print("Starting TCORE")
     F_prime, A_prime, I_prime, G_prime = compilation.compile(F, A, I, G, C)

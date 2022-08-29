@@ -9,7 +9,7 @@ SEEN_PSI = 'seen-psi'
 SEPARATOR = '-'
 GOAL_ACHIEVED = "goal-achieved"
 OPTIMIZED = False
-
+SIMPLIFY_GOAL = False
 
 class ProblemUnsolvableException(Exception):
     pass
@@ -352,7 +352,15 @@ def compile(F, A, I, G, C):
             a.effects.append(eff)
         if ds.FALSE() not in a.precondition:
             A_prime.append(a)
-    G_new = ds.And([G, G_prime]).simplified()
+
+    if SIMPLIFY_GOAL and isinstance(G, ds.Or):
+        new_goal = ds.Literal('goal-ok', False)
+        F.append(new_goal)
+        reach_goal = ds.Action('reach-goal', ds.And([G, G_prime]).simplified(), [ds.Effect(ds.TRUE(), new_goal)])
+        G_new = new_goal
+        A_prime.append(reach_goal)
+    else:
+        G_new = ds.And([G, G_prime]).simplified()
 
     #print("Compiled actions: {}".format(compiled_action))
     return F + F_prime, A_prime, I + I_prime, G_new
