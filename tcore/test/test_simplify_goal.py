@@ -1,10 +1,8 @@
 from tcore.data_structures import convert
 from tcore import data_structures as ds
 from FDgrounder import ground
-from FDgrounder import pddl
 from tcore import compilation
 import pytest
-import time
 import pkg_resources
 
 def test_original_goal():

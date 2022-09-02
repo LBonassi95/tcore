@@ -1,7 +1,6 @@
 import os
 from os import path
 from FDgrounder import ground
-from FDgrounder import pddl
 from tcore import writer
 import tcore.data_structures as ds
 from tcore import compilation
