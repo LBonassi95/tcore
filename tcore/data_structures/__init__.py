@@ -1,4 +1,3 @@
-import imp
 from .formula import Literal
 from .formula import And
 from .formula import Or
