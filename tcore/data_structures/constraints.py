@@ -27,6 +27,9 @@ class HardConstraint:
     def __str__(self):
         return f'({self.kind} {str(self.gd1)})'
 
+    def __repr__(self) -> str:
+        return str(self)
+
 
 class Always(HardConstraint):
     def __init__(self, condition):

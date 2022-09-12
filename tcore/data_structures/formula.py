@@ -14,6 +14,9 @@ class Formula:
                 return False
         else:
             return False
+    
+    def __repr__(self) -> str:
+        return str(self)
 
 
 class Or(Formula):
@@ -102,6 +105,12 @@ class Literal:
     def simplified(self):
         return Literal(self.literal, self.negated)
 
+    def __hash__(self) -> int:
+        return hash((self.literal, self.negated))
+
+    def __repr__(self) -> str:
+        return str(self)
+
 
 class TRUE:
 
@@ -119,6 +128,9 @@ class TRUE:
 
     def negate(self):
         return FALSE()
+    
+    def __repr__(self) -> str:
+        return str(self)
 
 
 class FALSE:
@@ -137,3 +149,6 @@ class FALSE:
 
     def negate(self):
         return TRUE()
+    
+    def __repr__(self) -> str:
+        return str(self)

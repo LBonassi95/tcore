@@ -9,7 +9,6 @@ SEEN_PSI = 'seen-psi'
 SEPARATOR = '-'
 GOAL_ACHIEVED = "goal-achieved"
 OPTIMIZED = False
-SIMPLIFY_GOAL = False
 
 class ProblemUnsolvableException(Exception):
     pass
@@ -319,7 +318,7 @@ def get_relevant_constraints(a, relevancy_dict):
     return relevant_constrains
 
 
-def compile(F, A, I, G, C):
+def compile(F, A, I, G, C, simplify_goal=False):
     relevancy_dict = build_relevancy_dict(C)
     A_prime = []
     G_prime = []
@@ -353,7 +352,7 @@ def compile(F, A, I, G, C):
         if ds.FALSE() not in a.precondition:
             A_prime.append(a)
 
-    if SIMPLIFY_GOAL and isinstance(G, ds.Or):
+    if simplify_goal and isinstance(G, ds.Or):
         new_goal = ds.Literal('goal-ok', False)
         F.append(new_goal)
         reach_goal = ds.Action('reach-goal', ds.And([G, G_prime]).simplified(), [ds.Effect(ds.TRUE(), new_goal)])

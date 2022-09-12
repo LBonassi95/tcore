@@ -12,6 +12,9 @@ class Effect:
         else:
             return '(when {} {})'.format(str(self.condition), str(self.effect))
 
+    def __repr__(self) -> str:
+        return str(self)
+
 
 class Action:
     def __init__(self, name, pre, eff):
@@ -32,3 +35,6 @@ class Action:
 
         pre_str = str(And(self.precondition).simplified())
         return action_str.format(name=self.name, preconditions=pre_str, effects=eff_str)
+    
+    def __repr__(self) -> str:
+        return str(self)

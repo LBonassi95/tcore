@@ -19,21 +19,20 @@ def main(domain, problem, output, optimized, simplify_goal, show_info):
     F, A, I, G, C = ground(domain, problem)
     F, A, I, G, C = ds.convert(F, A, I, G, C)
     
-    if show_info:
-        pre_compilation_effects = sum([len(a.effects) for a in A])
     if optimized:
-        compilation.OPTIMIZED = True
-    if simplify_goal:
-        compilation.SIMPLIFY_GOAL = True
-
+        compilation.OPTIMIZED = True       
     start_time = time.time()
     print("Starting TCORE")
-    F_prime, A_prime, I_prime, G_prime = compilation.compile(F, A, I, G, C)
+    F_prime, A_prime, I_prime, G_prime = compilation.compile(F, A, I, G, C, simplify_goal=simplify_goal)
     print("TCORE-RUNTIME {}".format(time.time() - start_time))
 
     if show_info:
-        post_compilation_effects = sum([len(a_prime.effects) for a_prime in A_prime])
-        added_effects = post_compilation_effects - pre_compilation_effects
+        added_fluents = set([f for f in F_prime if f not in F])
+        added_effects = 0
+        for a in A_prime:
+            for eff in a.effects:
+                if eff.effect in added_fluents:
+                    added_effects += 1
         print(f"Fluents added: {len(F_prime) - len(F)}")
         print(f"Effects added: {added_effects}")
 
